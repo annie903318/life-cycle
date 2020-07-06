@@ -1,26 +1,37 @@
-import React from 'react';
-import logo from './logo.svg';
+import React,{Component} from 'react';
+import ReactDOM from 'react-dom';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export default class App extends Component{
+  constructor(props){
+    super(props)
+    this.state={time:new Date().toLocaleTimeString()}
+  }
+  componentDidMount(){  //render()後會執行一次
+    const updateTime = () => {
+      this.setState({time: new Date().toLocaleTimeString()})
+    }
+    setInterval(updateTime,1000); //每秒執行
+  }
+  componentDidUpdate(){ //更新後的狀態
+    const {time} = this.state;
+    console.log({time})
+  }
+  componentWillUnmount() { //Component要被移除時執行
+    const {time} = this.state;
+    console.log(`移除組件的時間為:${time}`)
+  }
+  render(){
+    const {time} = this.state
+    return (
+      <p className="clock">{time}</p>
+    );
+  }
 }
 
-export default App;
+const removeComponent = () => {
+  ReactDOM.unmountComponentAtNode(document.getElementById('root')) //移除Component
+}
+
+setInterval(removeComponent,5000) //5秒後移除Component
+
